@@ -3,22 +3,21 @@ import telebot
 TOKEN = ""
 bot = telebot.TeleBot(TOKEN)
 ratings = {}
-teacher = {
-    "Программирование": ["Арина Атаманова", 
-                         "Кирилл Коваленко", 
-                         "Игорь Гетто", 
-                         "Максим Насонов", 
-                         "Илья Козлобородов", 
-                         "Евгений Ермаков", 
-                         "Влада кузнецова", 
-                         "Егор Чеглов"],
-    "Игровая графика": ["Диана Шульга", 
-                        "Арина Атаманова"],
-    "Дизайн сайтов": ["Марина Ефремова"],
-    "Робототехника": ["Влада Кузнецова", 
-                      "Кирилл Коваленко", 
-                      "Арина Атаманова"]
-    }
+game_graphics = ["Диана Шульга",
+                 "Арина Атаманова"]
+web_design = ["Марина Ефремова"]
+robots = ["Влада Кузнецова",
+          "Кирилл Коваленко",
+          "Арина Атаманова"]
+coding = ["Арина Атаманова",
+          "Кирилл Коваленко",
+          "Игорь Гетто",
+          "Максим Насонов",
+          "Илья Козлобородов",
+          "Евгений Ермаков",
+          "Влада кузнецова",
+          "Егор Чеглов"]
+
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -28,19 +27,31 @@ def handle_start(message):
     keyboard.add(mark_btn, rating_btn)
     bot.send_message(message.chat.id, "Привет! Поставь оценку преподу, пж", reply_markup=keyboard)
 
+
 @bot.message_handler(regexp='Поставить оценку')
 def mark(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
-    buttons = [telebot.types.KeyboardButton(i) for i in teacher.keys()]
-    keyboard.add(buttons)
-    bot.send_message(message.chat.id, "Выбери предмет, учителя которого ты хочешь оценить", reply_markup=keyboard)
+    btn_game_graphics = telebot.types.InlineKeyboardButton("Игровая графика", callback_data="Игровая графика")
+    btn_web_design = telebot.types.InlineKeyboardButton("Дизайн сайтов", callback_data="Дизайн сайтов")
+    btn_robots = telebot.types.InlineKeyboardButton("Робототехника", callback_data="Робототехника")
+    btn_coding = telebot.types.InlineKeyboardButton("Программирование", callback_data="Программирование")
+    keyboard.add(btn_game_graphics, btn_web_design, btn_robots, btn_coding)
+    bot.send_message(message.chat.id, "Выбери предмет:", reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda callback: True)
+def handle_callback(callback):
+    if callback.data == "Игровая графика":
+        keyboard = telebot.types.InlineKeyboardMarkup()
+
+    bot.send_message(callback.message.chat.id, "Выбери учителя", reply_markup=keyboard)
+
 
 @bot.message_handler(regexp='Рейтинг преподавателей')
 def rating(message):
     global ratings
-    ratings = sorted(ratings.items, key=lambda item: -item[1])
-    bot.send_message(message.chat.id, f"Рейтинг:\n {ratings}")
-
+    rtngs = sorted(ratings.items(), key=lambda item: item[1], reverse=True)
+    bot.send_message(message.chat.id, f"Рейтинг:\n {rtngs}")
 
 
 print("Сервер запущен.")
