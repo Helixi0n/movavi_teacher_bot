@@ -1,6 +1,6 @@
 import telebot
 
-TOKEN = "7824298837:AAEprghKHPe3b8c5Tq6HjTnxHGJLKTyWLzg"
+TOKEN = ""
 bot = telebot.TeleBot(TOKEN)
 ratings = {}
 teacher = {
