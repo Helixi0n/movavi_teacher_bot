@@ -95,7 +95,6 @@ def like(callback):
     else:
         ratings[teacher] = 1
     bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
-    print(ratings)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "dislike")
@@ -109,14 +108,18 @@ def dislike(callback):
     else:
         ratings[teacher] = -1
     bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
-    print(ratings)
 
 
 @bot.message_handler(regexp='Рейтинг преподавателей')
 def rating(message):
     global ratings
     rtngs = sorted(ratings.items(), key=lambda item: item[1], reverse=True)
-    bot.send_message(message.chat.id, f"Рейтинг:\n {rtngs}")
+    rat = ''
+    n = 1
+    for key, val in ratings.items():
+        rat += f'{n}. {key}: {val}\n'
+        n += 1
+    bot.send_message(message.chat.id, f'Рейтинг:\n{rat}')
 
 
 print("Сервер запущен.")
