@@ -21,7 +21,7 @@ coding = ["Арина Атаманова",
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
     mark_btn = telebot.types.KeyboardButton("Поставить оценку")
     rating_btn = telebot.types.KeyboardButton("Рейтинг преподавателей")
     keyboard.add(mark_btn, rating_btn)
@@ -41,8 +41,19 @@ def mark(message):
 
 @bot.callback_query_handler(func=lambda callback: True)
 def handle_callback(callback):
+    keyboard = telebot.types.InlineKeyboardMarkup()
     if callback.data == "Игровая графика":
-        keyboard = telebot.types.InlineKeyboardMarkup()
+        for i in game_graphics:
+            keyboard.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
+    elif callback.data == "Дизайн сайтов":
+        for i in web_design:
+            keyboard.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
+    elif callback.data == "Робототехника":
+        for i in robots:
+            keyboard.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
+    elif callback.data == "Программирование":
+        for i in coding:
+            keyboard.add(telebot.types.InlineKeyboardButton(i, callback_data=i))
 
     bot.send_message(callback.message.chat.id, "Выбери учителя", reply_markup=keyboard)
 
