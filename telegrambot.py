@@ -81,7 +81,7 @@ def mark_callback(callback):
     like_btn = telebot.types.InlineKeyboardButton("👍", callback_data="like")
     dislike_btn = telebot.types.InlineKeyboardButton("👎", callback_data="dislike")
     keyboard.add(like_btn, dislike_btn)
-    bot.send_message(callback.message.chat.id, f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
+    bot.send_photo(callback.message.chat.id, f'', f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "like")
@@ -113,7 +113,7 @@ def dislike(callback):
 @bot.message_handler(regexp='Рейтинг преподавателей')
 def rating(message):
     global ratings
-    rtngs = sorted(ratings.items(), key=lambda item: item[1], reverse=True)
+    ratings = dict(sorted(ratings.items(), key=lambda item: item[1], reverse=True))
     rat = ''
     n = 1
     for key, val in ratings.items():
