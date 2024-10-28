@@ -1,7 +1,6 @@
 import telebot
-from telebot.types import ReplyKeyboardRemove
 
-TOKEN = ""
+TOKEN = "7824298837:AAEprghKHPe3b8c5Tq6HjTnxHGJLKTyWLzg"
 bot = telebot.TeleBot(TOKEN)
 ratings = {}
 teacher = {
@@ -23,34 +22,25 @@ teacher = {
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
-    commands = ["Поставить оценку", "Рейтинг преподавателей"]
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-    buttons = [telebot.types.KeyboardButton(command) for command in commands]
-    keyboard.add(*buttons)
-    bot.send_message(message.chat.id, "Привет! Поставь оценку преподу, пж")
-    bot.register_next_step_handler(message, choice)
+    mark_btn = telebot.types.KeyboardButton("Поставить оценку")
+    rating_btn = telebot.types.KeyboardButton("Рейтинг преподавателей")
+    keyboard.add(mark_btn, rating_btn)
+    bot.send_message(message.chat.id, "Привет! Поставь оценку преподу, пж", reply_markup=keyboard)
 
-def choice(message):
-    txt = message.text
-    if txt == "Поставить оценку":
-        bot.register_next_step_handler(message, mark)
-    elif txt == "Рейтинг преподавателей":
-        bot.register_next_step_handler(message, rating)
-    else:
-        bot.send_message(message.chat.id, "Чё?")
-
+@bot.message_handler(regexp='Поставить оценку')
 def mark(message):
-    pass 
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    buttons = [telebot.types.KeyboardButton(i) for i in teacher.keys()]
+    keyboard.add(buttons)
+    bot.send_message(message.chat.id, "Выбери предмет, учителя которого ты хочешь оценить", reply_markup=keyboard)
 
+@bot.message_handler(regexp='Рейтинг преподавателей')
 def rating(message):
     global ratings
-    ratings = sorted(ratings.items, key=lambda x: -x[1])
+    ratings = sorted(ratings.items, key=lambda item: -item[1])
     bot.send_message(message.chat.id, f"Рейтинг:\n {ratings}")
 
-
-keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
-buttons = [telebot.types.KeyboardButton(good) for good in goods]
-keyboard.add(*buttons)
 
 
 print("Сервер запущен.")
