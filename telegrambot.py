@@ -43,8 +43,9 @@ def mark(message):
     pass 
 
 def rating(message):
+    global ratings
     ratings = sorted(ratings.items, key=lambda x: -x[1])
-    bot.send_message(message.chat.id, f"Рейтинг:\n{raitings}")
+    bot.send_message(message.chat.id, f"Рейтинг:\n {ratings}")
 
 
 keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True)
