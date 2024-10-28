@@ -1,8 +1,10 @@
 import telebot
 
-TOKEN = ""
+TOKEN = "7824298837:AAEprghKHPe3b8c5Tq6HjTnxHGJLKTyWLzg"
 bot = telebot.TeleBot(TOKEN)
 ratings = {}
+teacher = ''
+lst = ["Игровая графика", "Дизайн сайтов", "Робототехника", "Программирование"]
 game_graphics = ["Диана Шульга",
                  "Арина Атаманова"]
 web_design = ["Марина Ефремова"]
@@ -20,6 +22,7 @@ coding = ["Арина Атаманова",
 
 
 @bot.message_handler(commands=['start'])
+@bot.callback_query_handler(func=lambda callback: callback.data == "Back")
 def handle_start(message):
     keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True,
                                                  one_time_keyboard=True)
@@ -46,7 +49,7 @@ def mark(message):
     bot.send_message(message.chat.id, "Выбери предмет:", reply_markup=keyboard)
 
 
-@bot.callback_query_handler(func=lambda callback: True)
+@bot.callback_query_handler(func=lambda callback: callback.data in lst)
 def teacher_callback(callback):
     keyboard = telebot.types.InlineKeyboardMarkup()
     if callback.data == "Игровая графика":
@@ -70,16 +73,41 @@ def teacher_callback(callback):
                      reply_markup=keyboard)
 
 
-@bot.callback_query_handler(func=lambda callback: True)
+@bot.callback_query_handler(func=lambda callback: callback.data in game_graphics or callback.data in web_design or callback.data in robots or callback.data in coding)
 def mark_callback(callback):
+    global teacher
+    teacher = callback.data
     keyboard = telebot.types.InlineKeyboardMarkup()
     like = telebot.types.InlineKeyboardButton("👍", callback_data="like")
     dislike = telebot.types.InlineKeyboardButton("👎", callback_data="dislike")
     keyboard.add(like, dislike)
-    bot.send_photo(callback.message.chat.id,
-                   f"{callback.data}.jpg",
-                   f"Преподователь: {callback.data}\n Поставьте оценку учителю",
-                   reply_markup=keyboard)
+    bot.send_message(callback.message.chat.id, f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "like")
+def like(callback):
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    back = telebot.types.InlineKeyboardButton("Вернуться в главное меню", callback_data="Back")
+    keyboard.add(back)
+    for keys, value in ratings.items():
+        if teacher in keys:
+            value += 1
+        else:
+            ratings[teacher] = 1
+    bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == "dislike")
+def dislike(callback):
+    keyboard = telebot.types.InlineKeyboardMarkup()
+    back = telebot.types.InlineKeyboardButton("Вернуться в главное меню", callback_data="Back")
+    keyboard.add(back)
+    for keys, value in ratings.items():
+        if teacher in keys:
+            value -= 1
+        else:
+            ratings[teacher] = -1
+    bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
 
 
 @bot.message_handler(regexp='Рейтинг преподавателей')
