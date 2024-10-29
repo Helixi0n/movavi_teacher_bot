@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="ok">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/example.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/markup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/movavi_teacher_bot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/movavi_teacher_bot.iml" afterDir="false" />
+    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="основное меню">
+      <change afterPath="$PROJECT_DIR$/data/course_teachers_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/teachers_data.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/markup.py" beforeDir="false" afterPath="$PROJECT_DIR$/markup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/telegrambot.py" beforeDir="false" afterPath="$PROJECT_DIR$/telegrambot.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -51,6 +49,8 @@
   "keyToString": {
     "ASKED_ADD_EXTERNAL_FILES": "true",
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "Python.markup.executor": "Run",
+    "Python.model.executor": "Run",
     "Python.telegrambot.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "ira__version",
@@ -183,7 +183,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730115327994</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="основное меню">
+      <option name="closed" value="true" />
+      <created>1730213643278</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1730213643278</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -204,6 +212,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit" />
     <MESSAGE value="ok" />
-    <option name="LAST_COMMIT_MESSAGE" value="ok" />
+    <MESSAGE value="основное меню" />
+    <option name="LAST_COMMIT_MESSAGE" value="основное меню" />
   </component>
 </project>
