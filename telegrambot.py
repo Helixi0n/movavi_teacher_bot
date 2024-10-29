@@ -3,7 +3,8 @@ import os
 import telebot
 from dotenv import load_dotenv
 
-from markup import create_inline_keyboard
+import markup
+from model import teachers, find_teachers
 
 load_dotenv()
 
@@ -14,20 +15,47 @@ if not TOKEN:
 
 bot = telebot.TeleBot(TOKEN)
 
-main_menu = create_inline_keyboard([
-    ("Поставить оценку", "courses"),
-    ("Моя оценка", "my_marks"),
-    ("Рейтинг преподавателей", "ratings")
-])
-
+FOTO_PATH = "Teachers_Photo/"
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
     bot.send_message(
         message.chat.id,
         "Привет! Выбери действие",
-        reply_markup=main_menu
+        reply_markup=markup.main_menu
     )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.COURSES)
+def handle_callback_courses(callback):
+    bot.send_message(
+        callback.message.chat.id,
+        "Выбери курс",
+        reply_markup=markup.courses_menu
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SHOW_TEACHERS))
+def handle_callback_show_teachers(callback):
+    course_name = callback.data.split(":")[1]
+    bot.send_message(
+        callback.message.chat.id,
+        "Выбери учителя",
+        reply_markup=markup.get_teachers_menu(course_name)
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SELECT_TEACHER))
+def handle_callback_select_teacher(callback):
+    teacher_name = callback.data.split(":")[1]
+    teacher = find_teachers([teacher_name])[0]
+    with open(FOTO_PATH + teacher.photo, "rb") as photo:
+        bot.send_photo(
+            callback.message.chat.id,
+            photo=photo,
+            caption=f"{teacher.name}\n{teacher.bio}",
+            reply_markup=markup.get_teacher_like_menu(teacher_name)
+        )
 
 
 print("Сервер запущен.")
