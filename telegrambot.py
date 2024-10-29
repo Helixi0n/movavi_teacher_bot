@@ -81,7 +81,7 @@ def mark_callback(callback):
     like_btn = telebot.types.InlineKeyboardButton("👍", callback_data="like")
     dislike_btn = telebot.types.InlineKeyboardButton("👎", callback_data="dislike")
     keyboard.add(like_btn, dislike_btn)
-    bot.send_photo(callback.message.chat.id, f'', f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
+    bot.send_message(callback.message.chat.id, f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == "like")
