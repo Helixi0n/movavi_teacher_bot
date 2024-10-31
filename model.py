@@ -1,3 +1,7 @@
+"""
+В этом файле определяются классы данных (модели)
+"""
+
 from collections import defaultdict
 
 from data.course_teachers_data import course_teacher_mapping
@@ -43,6 +47,7 @@ class VotesList:
         self.votes = [vote for vote in self.votes if not (user_id == vote.user_id and teacher == vote.teacher)]
         self.votes.append(UserVote(user_id, teacher, vote_value))
 
+
 def get_rating():
     teacher_votes = user_votes.get_teachers_votes()
     rating = [
@@ -51,7 +56,6 @@ def get_rating():
     ]
     rating.sort(key=lambda x: -x[1])
     return rating[:10]
-
 
 
 teachers = TeacherList(teachers_list)

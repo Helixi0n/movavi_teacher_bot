@@ -12,3 +12,8 @@
 ```ini
 TELEGRAM_BOT_TOKEN=XXXXXXXX:YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
 ```
+
+Так же нужно установить требуемые библиотеки:
+```commandline
+pip install -r requirements.txt
+```

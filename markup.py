@@ -1,6 +1,10 @@
+"""
+В этом файле находятся функции для создания клавиатур (меню).
+"""
+
 import telebot
 
-from model import course_to_teachers, get_rating
+from model import course_to_teachers
 
 COURSES = "courses"
 MY_MARKS = "my_marks"
@@ -31,6 +35,7 @@ def get_teachers_menu(course_name: str):
         (teacher.name, f"{SELECT_TEACHER}:{teacher.name}")
         for teacher in course_to_teachers[course_name]
     ])
+
 
 def get_teacher_like_menu(teacher_name: str):
     return create_inline_keyboard([

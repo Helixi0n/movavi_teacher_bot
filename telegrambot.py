@@ -1,3 +1,8 @@
+"""
+Основной файл проекта.
+Тут находятся только хендлеры.
+"""
+
 import os
 
 import telebot
@@ -40,7 +45,7 @@ def handle_callback_courses(callback):
 def handle_callback_rating(callback):
     ratings = get_rating()
     res = "\n".join([
-        f"{i+1:>3}\. {teacher:<20} {rating}"
+        f"{i + 1:>3}\. {teacher:<20} {rating}"
         for i, (teacher, rating) in enumerate(ratings)
     ])
 
