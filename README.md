@@ -25,5 +25,5 @@ pip install -r requirements.txt
 ### Запуск:
 
 ```commandline
-pyhton telegrambot.py
+python telegrambot.py
 ```
