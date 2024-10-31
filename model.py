@@ -1,5 +1,4 @@
 from collections import defaultdict
-from email.policy import default
 
 from data.course_teachers_data import course_teacher_mapping
 from data.teachers_data import teachers_list
