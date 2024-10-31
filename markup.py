@@ -1,6 +1,6 @@
 import telebot
 
-from model import course_teachers
+from model import course_to_teachers
 
 
 def create_reply_keyboard(buttons_titles: list[str]):
@@ -22,13 +22,13 @@ def create_inline_keyboard(buttons: list[tuple[str, str]]):
 def get_teachers_menu(course_name: str):
     return create_inline_keyboard([
         (teacher.name, f"{SELECT_TEACHER}:{teacher.name}")
-        for teacher in course_teachers[course_name]
+        for teacher in course_to_teachers[course_name]
     ])
 
 def get_teacher_like_menu(teacher_name: str):
     return create_inline_keyboard([
         ("👍", f"{LIKE_TEACHER}:{teacher_name}:1"),
-        ("👎", f"{LIKE_TEACHER}:{teacher_name}:0"),
+        ("👎", f"{LIKE_TEACHER}:{teacher_name}:-1"),
     ])
 
 
@@ -47,5 +47,5 @@ main_menu = create_inline_keyboard([
 
 courses_menu = create_inline_keyboard([
     (course_name, f"{SHOW_TEACHERS}:{course_name}")
-    for course_name in course_teachers
+    for course_name in course_to_teachers
 ])

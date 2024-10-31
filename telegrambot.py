@@ -4,7 +4,7 @@ import telebot
 from dotenv import load_dotenv
 
 import markup
-from model import teachers, find_teachers
+from model import teachers, user_votes
 
 load_dotenv()
 
@@ -16,6 +16,7 @@ if not TOKEN:
 bot = telebot.TeleBot(TOKEN)
 
 FOTO_PATH = "Teachers_Photo/"
+
 
 @bot.message_handler(commands=['start'])
 def handle_start(message):
@@ -48,7 +49,7 @@ def handle_callback_show_teachers(callback):
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SELECT_TEACHER))
 def handle_callback_select_teacher(callback):
     teacher_name = callback.data.split(":")[1]
-    teacher = find_teachers([teacher_name])[0]
+    teacher = teachers.get_teachers([teacher_name])[0]
     with open(FOTO_PATH + teacher.photo, "rb") as photo:
         bot.send_photo(
             callback.message.chat.id,
@@ -57,6 +58,15 @@ def handle_callback_select_teacher(callback):
             reply_markup=markup.get_teacher_like_menu(teacher_name)
         )
 
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.LIKE_TEACHER))
+def handle_callback_add_like(callback):
+    _, teacher, vote_value = callback.data.split(":")
+    vote_value = int(vote_value)
+    user_votes.add_vote(callback.from_user.id, teacher, vote_value)
+    bot.send_message(
+        callback.message.chat.id,
+        "Отметка записана",
+    )
 
 print("Сервер запущен.")
 bot.polling(
