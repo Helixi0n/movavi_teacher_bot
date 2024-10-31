@@ -4,7 +4,7 @@ import telebot
 from dotenv import load_dotenv
 
 import markup
-from model import teachers, user_votes
+from model import teachers, user_votes, get_rating
 
 load_dotenv()
 
@@ -36,6 +36,21 @@ def handle_callback_courses(callback):
     )
 
 
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.RATINGS)
+def handle_callback_rating(callback):
+    ratings = get_rating()
+    res = "\n".join([
+        f"{i+1:>3}\. {teacher:<20} {rating}"
+        for i, (teacher, rating) in enumerate(ratings)
+    ])
+
+    bot.send_message(
+        callback.message.chat.id,
+        "*Топ\-10 преподавателей*:\n```" + res + "\n```",
+        parse_mode="MarkdownV2"
+    )
+
+
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SHOW_TEACHERS))
 def handle_callback_show_teachers(callback):
     course_name = callback.data.split(":")[1]
@@ -58,6 +73,7 @@ def handle_callback_select_teacher(callback):
             reply_markup=markup.get_teacher_like_menu(teacher_name)
         )
 
+
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.LIKE_TEACHER))
 def handle_callback_add_like(callback):
     _, teacher, vote_value = callback.data.split(":")
@@ -67,6 +83,7 @@ def handle_callback_add_like(callback):
         callback.message.chat.id,
         "Отметка записана",
     )
+
 
 print("Сервер запущен.")
 bot.polling(

@@ -4,10 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="аэа">
+    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="лайки и дизлайки">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/course_teachers_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/course_teachers_data.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/teachers_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/teachers_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/markup.py" beforeDir="false" afterPath="$PROJECT_DIR$/markup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/telegrambot.py" beforeDir="false" afterPath="$PROJECT_DIR$/telegrambot.py" afterDir="false" />
@@ -63,7 +61,7 @@
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Python.markup.executor": "Run",
     "Python.model.executor": "Run",
-    "Python.telegrambot.executor": "Debug",
+    "Python.telegrambot.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "ira__version",
     "last_opened_file_path": "F:/Ирино/project/movavi_teacher_bot",
@@ -307,7 +305,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730213643278</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="лайки и дизлайки">
+      <option name="closed" value="true" />
+      <created>1730390207108</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1730390207108</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -341,6 +347,7 @@
     <MESSAGE value="commit" />
     <MESSAGE value="ok" />
     <MESSAGE value="основное меню" />
-    <option name="LAST_COMMIT_MESSAGE" value="основное меню" />
+    <MESSAGE value="лайки и дизлайки" />
+    <option name="LAST_COMMIT_MESSAGE" value="лайки и дизлайки" />
   </component>
 </project>

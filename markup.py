@@ -1,6 +1,13 @@
 import telebot
 
-from model import course_to_teachers
+from model import course_to_teachers, get_rating
+
+COURSES = "courses"
+MY_MARKS = "my_marks"
+RATINGS = "ratings"
+SHOW_TEACHERS = "show_teachers"
+SELECT_TEACHER = "select_teacher"
+LIKE_TEACHER = "like_teacher"
 
 
 def create_reply_keyboard(buttons_titles: list[str]):
@@ -31,13 +38,6 @@ def get_teacher_like_menu(teacher_name: str):
         ("👎", f"{LIKE_TEACHER}:{teacher_name}:-1"),
     ])
 
-
-COURSES = "courses"
-MY_MARKS = "my_marks"
-RATINGS = "ratings"
-SHOW_TEACHERS = "show_teachers"
-SELECT_TEACHER = "select_teacher"
-LIKE_TEACHER = "like_teacher"
 
 main_menu = create_inline_keyboard([
     ("Поставить оценку", COURSES),
