@@ -1,125 +1,151 @@
-import telebot
+"""
+Основной файл проекта.
+Тут находятся только хендлеры.
+"""
 
-TOKEN = ""
+import os
+from collections import defaultdict
+
+import telebot
+from dotenv import load_dotenv
+
+import markup
+from model import teachers, user_votes, get_rating
+
+load_dotenv()
+
+TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
+if not TOKEN:
+    print("Переменная TELEGRAM_BOT_TOKEN не задана!")
+    exit(-1)
+
 bot = telebot.TeleBot(TOKEN)
-ratings = {}
-teacher = ''
-lst = ["Игровая графика", "Дизайн сайтов", "Робототехника", "Программирование"]
-game_graphics = ["Диана Шульга",
-                 "Арина Атаманова"]
-web_design = ["Марина Ефремова"]
-robots = ["Влада Кузнецова",
-          "Кирилл Коваленко",
-          "Арина Атаманова"]
-coding = ["Арина Атаманова",
-          "Кирилл Коваленко",
-          "Игорь Гетто",
-          "Максим Насонов",
-          "Илья Козлобородов",
-          "Евгений Ермаков",
-          "Влада кузнецова",
-          "Егор Чеглов"]
+
+FOTO_PATH = "Teachers_Photo/"
+
+back_stack = defaultdict(list)
 
 
 @bot.message_handler(commands=['start'])
-@bot.callback_query_handler(func=lambda callback: callback.data == "Back")
 def handle_start(message):
-    keyboard = telebot.types.ReplyKeyboardMarkup(resize_keyboard=True,
-                                                 one_time_keyboard=True)
-    mark_btn = telebot.types.KeyboardButton("Поставить оценку")
-    rating_btn = telebot.types.KeyboardButton("Рейтинг преподавателей")
-    keyboard.add(mark_btn, rating_btn)
-    bot.send_message(message.chat.id,
-                     "Привет! Поставь оценку преподу, пж",
-                     reply_markup=keyboard)
+    message = bot.send_message(
+        message.chat.id,
+        "Привет! Выбери действие",
+        reply_markup=markup.main_menu
+    )
+    back_stack[message.chat.id].append(lambda: handle_start_replace(message))
 
 
-@bot.message_handler(regexp='Поставить оценку')
-def mark(message):
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    btn_game_graphics = telebot.types.InlineKeyboardButton("Игровая графика",
-                                                           callback_data="Игровая графика")
-    btn_web_design = telebot.types.InlineKeyboardButton("Дизайн сайтов",
-                                                        callback_data="Дизайн сайтов")
-    btn_robots = telebot.types.InlineKeyboardButton("Робототехника",
-                                                    callback_data="Робототехника")
-    btn_coding = telebot.types.InlineKeyboardButton("Программирование",
-                                                    callback_data="Программирование")
-    keyboard.add(btn_game_graphics, btn_web_design, btn_robots, btn_coding)
-    bot.send_message(message.chat.id, "Выбери предмет:", reply_markup=keyboard)
+def handle_start_replace(message):
+    back_stack[message.chat.id].append(lambda: handle_start_replace(message))
+    bot.edit_message_text(
+        "Выбери действие",
+        message.chat.id,
+        message.message_id,
+        reply_markup=markup.main_menu
+    )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data in lst)
-def teacher_callback(callback):
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    if callback.data == "Игровая графика":
-        for i in game_graphics:
-            keyboard.add(telebot.types.InlineKeyboardButton(i,
-                                                            callback_data=i))
-    elif callback.data == "Дизайн сайтов":
-        for i in web_design:
-            keyboard.add(telebot.types.InlineKeyboardButton(i,
-                                                            callback_data=i))
-    elif callback.data == "Робототехника":
-        for i in robots:
-            keyboard.add(telebot.types.InlineKeyboardButton(i,
-                                                            callback_data=i))
-    elif callback.data == "Программирование":
-        for i in coding:
-            keyboard.add(telebot.types.InlineKeyboardButton(i,
-                                                            callback_data=i))
-    bot.send_message(callback.message.chat.id,
-                     "Выбери учителя",
-                     reply_markup=keyboard)
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.COURSES)
+def handle_callback_courses(callback):
+    back_stack[callback.message.chat.id].append(lambda: handle_callback_courses(callback))
+    bot.edit_message_text(
+        "Выбери курс",
+        callback.message.chat.id,
+        callback.message.id,
+        reply_markup=markup.courses_menu
+    )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data in game_graphics or callback.data in web_design or callback.data in robots or callback.data in coding)
-def mark_callback(callback):
-    global teacher
-    teacher = callback.data
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    like_btn = telebot.types.InlineKeyboardButton("👍", callback_data="like")
-    dislike_btn = telebot.types.InlineKeyboardButton("👎", callback_data="dislike")
-    keyboard.add(like_btn, dislike_btn)
-    bot.send_message(callback.message.chat.id, f"Учитель: {callback.data}\nВаша оценка:", reply_markup=keyboard)
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.RATINGS)
+def handle_callback_rating(callback):
+    back_stack[callback.message.chat.id].append(lambda: handle_callback_rating(callback))
+    ratings = get_rating()
+    res = "\n".join([
+        f"{i + 1:>3}\. {teacher:<20} {rating}"
+        for i, (teacher, rating) in enumerate(ratings)
+    ])
+
+    bot.edit_message_text(
+        "*Топ\-10 преподавателей*:\n```" + res + "\n```",
+        callback.message.chat.id,
+        callback.message.id,
+        parse_mode="MarkdownV2",
+        reply_markup=markup.create_inline_keyboard([], True)
+    )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data == "like")
-def like(callback):
-    global ratings
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    back = telebot.types.InlineKeyboardButton("Вернуться в главное меню", callback_data="Back")
-    keyboard.add(back)
-    if teacher in ratings.keys():
-        ratings[teacher] += 1
-    else:
-        ratings[teacher] = 1
-    bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SHOW_TEACHERS))
+def handle_callback_show_teachers(callback):
+    back_stack[callback.message.chat.id].append(lambda: handle_callback_show_teachers(callback))
+    course_name = callback.data.split(":")[1]
+    bot.edit_message_text(
+        "Выбери учителя",
+        callback.message.chat.id,
+        callback.message.id,
+        reply_markup=markup.get_teachers_menu(course_name, True)
+    )
 
 
-@bot.callback_query_handler(func=lambda callback: callback.data == "dislike")
-def dislike(callback):
-    global ratings
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    back = telebot.types.InlineKeyboardButton("Вернуться в главное меню", callback_data="Back")
-    keyboard.add(back)
-    if teacher in ratings.keys():
-        ratings[teacher] -= 1
-    else:
-        ratings[teacher] = -1
-    bot.send_message(callback.message.chat.id, "Спасибо за оценку!", reply_markup=keyboard)
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SELECT_TEACHER))
+def handle_callback_select_teacher(callback):
+    teacher_name = callback.data.split(":")[1]
+    teacher = teachers.get_teachers([teacher_name])[0]
+    with open(FOTO_PATH + teacher.photo, "rb") as photo:
+        bot.send_photo(
+            callback.message.chat.id,
+            photo=photo,
+            caption=f"{teacher.name}\n{teacher.bio}",
+            reply_markup=markup.get_teacher_like_menu(teacher_name, False)
+        )
 
 
-@bot.message_handler(regexp='Рейтинг преподавателей')
-def rating(message):
-    global ratings
-    ratings = dict(sorted(ratings.items(), key=lambda item: item[1], reverse=True))
-    rat = ''
-    n = 1
-    for key, val in ratings.items():
-        rat += f'{n}. {key}: {val}\n'
-        n += 1
-    bot.send_message(message.chat.id, f'Рейтинг:\n{rat}')
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.LIKE_TEACHER))
+def handle_callback_add_like(callback):
+    _, teacher, vote_value = callback.data.split(":")
+    vote_value = int(vote_value)
+    if vote_value:
+        user_votes.add_vote(callback.from_user.id, teacher, vote_value)
+        bot.send_message(
+            callback.message.chat.id,
+            f"{teacher} получил от вас {'👍' if vote_value == 1 else '👎'}",
+        )
+    bot.delete_message(
+        chat_id=callback.message.chat.id,
+        message_id=callback.message.id,
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.MY_MARKS)
+def handle_callback_show_my_marks(callback):
+    back_stack[callback.message.chat.id].append(lambda: handle_callback_show_my_marks(callback))
+    bot.edit_message_text(
+        "*Твои оценки*\nчто бы удалить нажми на соответсвующую кнопку",
+        callback.message.chat.id,
+        callback.message.id,
+        parse_mode="MarkdownV2",
+        reply_markup=markup.get_my_marks_menu(callback.from_user.id, True)
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.REMOVE_MARK))
+def handle_callback_remove_mark(callback):
+    _, teacher = callback.data.split(":")
+    user_votes.add_vote(callback.from_user.id, teacher, 0)
+    bot.send_message(
+        callback.message.chat.id,
+        f"Оценка {teacher} удалена",
+    )
+    back_stack[callback.message.chat.id].append(0)
+    handle_callback_go_back(callback)
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.GO_BACK)
+def handle_callback_go_back(callback):
+    stack = back_stack[callback.message.chat.id]
+    if stack:
+        stack.pop()
+        stack.pop()()
 
 
 print("Сервер запущен.")
