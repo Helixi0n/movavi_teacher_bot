@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="readme">
+    <list default="true" id="0f668629-22ed-4175-8960-adbbc68e33b2" name="Changes" comment="кнопка назад">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/markup.py" beforeDir="false" afterPath="$PROJECT_DIR$/markup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/telegrambot.py" beforeDir="false" afterPath="$PROJECT_DIR$/telegrambot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -262,7 +261,23 @@
       <option name="project" value="LOCAL" />
       <updated>1730395455685</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="кнопка назад">
+      <option name="closed" value="true" />
+      <created>1730559307246</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1730559307246</updated>
+    </task>
+    <task id="LOCAL-00023" summary="кнопка назад">
+      <option name="closed" value="true" />
+      <created>1730559357629</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1730559357629</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -301,6 +316,7 @@
     <MESSAGE value="коменты" />
     <MESSAGE value="readmy" />
     <MESSAGE value="readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="readme" />
+    <MESSAGE value="кнопка назад" />
+    <option name="LAST_COMMIT_MESSAGE" value="кнопка назад" />
   </component>
 </project>

@@ -52,7 +52,7 @@ def get_teacher_like_menu(teacher_name: str, back):
 
 main_menu = create_inline_keyboard([
     ("Поставить оценку", COURSES),
-    ("Моя оценка", MY_MARKS),
+    ("Мои оценки", MY_MARKS),
     ("Рейтинг преподавателей", RATINGS)
 ], False)
 

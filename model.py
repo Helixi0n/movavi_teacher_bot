@@ -1,7 +1,7 @@
 """
 В этом файле определяются классы данных (модели)
 """
-
+import json
 from collections import defaultdict
 
 from data.course_teachers_data import course_teacher_mapping
@@ -31,8 +31,19 @@ class UserVote:
 
 
 class VotesList:
+    EXPORT_FILE_NAME = "votes.json"
+
     def __init__(self):
         self.votes: list[UserVote] = []
+        self.load()
+
+    def load(self):
+        try:
+            with open(VotesList.EXPORT_FILE_NAME, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                self.votes = [UserVote(**vote_dict) for vote_dict in data]
+        except Exception:
+            self.votes = []
 
     def get_user_votes(self, user_id: str, teacher: str = None):
         pass
@@ -46,6 +57,12 @@ class VotesList:
     def add_vote(self, user_id: str, teacher: str, vote_value: int):
         self.votes = [vote for vote in self.votes if not (user_id == vote.user_id and teacher == vote.teacher)]
         self.votes.append(UserVote(user_id, teacher, vote_value))
+        self.save()
+
+    def save(self):
+        with open(VotesList.EXPORT_FILE_NAME, "w", encoding="utf-8") as file:
+            export = [d.__dict__ for d in self.votes]
+            json.dump(export, file)
 
 
 def get_rating():
