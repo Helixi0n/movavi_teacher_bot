@@ -38,7 +38,6 @@ def handle_start(message):
 
 def handle_start_replace(message):
     back_stack[message.chat.id].append(lambda: handle_start_replace(message))
-    print("234242342423424", message.id)
     bot.edit_message_text(
         "Выбери действие",
         message.chat.id,
