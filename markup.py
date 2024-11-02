@@ -4,7 +4,7 @@
 
 import telebot
 
-from model import course_to_teachers
+from model import course_to_teachers, user_votes
 
 COURSES = "courses"
 MY_MARKS = "my_marks"
@@ -13,6 +13,7 @@ SHOW_TEACHERS = "show_teachers"
 SELECT_TEACHER = "select_teacher"
 LIKE_TEACHER = "like_teacher"
 GO_BACK = "go_back"
+REMOVE_MARK = "remove_mark"
 
 back_button = telebot.types.InlineKeyboardButton("[ Назад ]", callback_data=GO_BACK)
 
@@ -39,6 +40,12 @@ def get_teachers_menu(course_name: str, back):
     return create_inline_keyboard([
         (teacher.name, f"{SELECT_TEACHER}:{teacher.name}")
         for teacher in course_to_teachers[course_name]
+    ], back)
+
+def get_my_marks_menu(user_id: str, back):
+    return create_inline_keyboard([
+        (f"{teacher_name} - {'👍' if vote_value == 1 else '👎'}", f"{REMOVE_MARK}:{teacher_name}")
+        for teacher_name, vote_value in user_votes.get_user_votes(user_id)
     ], back)
 
 

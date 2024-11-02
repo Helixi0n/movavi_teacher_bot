@@ -45,8 +45,8 @@ class VotesList:
         except Exception:
             self.votes = []
 
-    def get_user_votes(self, user_id: str, teacher: str = None):
-        pass
+    def get_user_votes(self, user_id: str) -> list[tuple[str, int]]:
+        return [(v.teacher, v.vote_value) for v in self.votes if v.user_id == user_id]
 
     def get_teachers_votes(self):
         res = defaultdict(int)
@@ -56,7 +56,8 @@ class VotesList:
 
     def add_vote(self, user_id: str, teacher: str, vote_value: int):
         self.votes = [vote for vote in self.votes if not (user_id == vote.user_id and teacher == vote.teacher)]
-        self.votes.append(UserVote(user_id, teacher, vote_value))
+        if vote_value:
+            self.votes.append(UserVote(user_id, teacher, vote_value))
         self.save()
 
     def save(self):
