@@ -86,29 +86,6 @@ def handle_callback_show_teachers(callback):
         reply_markup=markup.get_teachers_menu(course_name, True)
     )
 
-@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.MY_MARKS))
-def handle_callback_show_my_marks(callback):
-    back_stack[callback.message.chat.id].append(lambda: handle_callback_show_my_marks(callback))
-    bot.edit_message_text(
-        "*Твои оценки*\nчто бы удалить нажми на соответсвующую кнопку",
-        callback.message.chat.id,
-        callback.message.id,
-        parse_mode="MarkdownV2",
-        reply_markup=markup.get_my_marks_menu(callback.from_user.id, True)
-    )
-
-@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.REMOVE_MARK))
-def handle_callback_remove_mark(callback):
-    _, teacher = callback.data.split(":")
-    user_votes.add_vote(callback.from_user.id, teacher, 0)
-    bot.send_message(
-        callback.message.chat.id,
-        f"Оценка {teacher} удалена",
-    )
-    back_stack[callback.message.chat.id].append(0)
-    handle_callback_go_back(callback)
-
-
 
 @bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.SELECT_TEACHER))
 def handle_callback_select_teacher(callback):
@@ -137,6 +114,30 @@ def handle_callback_add_like(callback):
         chat_id=callback.message.chat.id,
         message_id=callback.message.id,
     )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data == markup.MY_MARKS)
+def handle_callback_show_my_marks(callback):
+    back_stack[callback.message.chat.id].append(lambda: handle_callback_show_my_marks(callback))
+    bot.edit_message_text(
+        "*Твои оценки*\nчто бы удалить нажми на соответсвующую кнопку",
+        callback.message.chat.id,
+        callback.message.id,
+        parse_mode="MarkdownV2",
+        reply_markup=markup.get_my_marks_menu(callback.from_user.id, True)
+    )
+
+
+@bot.callback_query_handler(func=lambda callback: callback.data.startswith(markup.REMOVE_MARK))
+def handle_callback_remove_mark(callback):
+    _, teacher = callback.data.split(":")
+    user_votes.add_vote(callback.from_user.id, teacher, 0)
+    bot.send_message(
+        callback.message.chat.id,
+        f"Оценка {teacher} удалена",
+    )
+    back_stack[callback.message.chat.id].append(0)
+    handle_callback_go_back(callback)
 
 
 @bot.callback_query_handler(func=lambda callback: callback.data == markup.GO_BACK)

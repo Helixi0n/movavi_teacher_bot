@@ -79,7 +79,4 @@ def get_rating():
 teachers = TeacherList(teachers_list)
 user_votes = VotesList()
 
-course_to_teachers = {
-    course_name: teachers.get_teachers(teacher_names)
-    for course_name, teacher_names in course_teacher_mapping.items()
-}
+course_to_teachers = course_teacher_mapping

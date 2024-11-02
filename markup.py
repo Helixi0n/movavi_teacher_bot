@@ -38,8 +38,8 @@ def create_inline_keyboard(buttons: list[tuple[str, str]], back):
 
 def get_teachers_menu(course_name: str, back):
     return create_inline_keyboard([
-        (teacher.name, f"{SELECT_TEACHER}:{teacher.name}")
-        for teacher in course_to_teachers[course_name]
+        (teacher_name, f"{SELECT_TEACHER}:{teacher_name}")
+        for teacher_name in course_to_teachers[course_name]
     ], back)
 
 def get_my_marks_menu(user_id: str, back):
